@@ -1,0 +1,28 @@
+<h1>Điều khiển ESP32</h1>
+
+<button onclick="sendCmd('ON')">BẬT</button>
+<button onclick="sendCmd('OFF')">TẮT</button>
+
+<h2>Dữ liệu cảm biến:</h2>
+<div id="sensor"></div>
+
+<script>
+const API = "https://iot-server-xxxxx.onrender.com";
+
+async function sendCmd(cmd) {
+    await fetch(API + "/cmd", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({cmd})
+    });
+    alert("Đã gửi: " + cmd);
+}
+
+async function loadData() {
+    const r = await fetch(API + "/data");
+    const j = await r.json();
+    document.getElementById("sensor").innerText = j.data;
+}
+
+setInterval(loadData, 2000);
+</script>
